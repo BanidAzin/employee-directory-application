@@ -1,14 +1,14 @@
 import React from 'react';
-import {View} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {NavigationContainer} from '@react-navigation/native';
+
+import {Router} from './src/Router';
 
 const App = () => {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        {/* Add router */}
-        <View />
+        <Router />
       </NavigationContainer>
     </SafeAreaProvider>
   );
