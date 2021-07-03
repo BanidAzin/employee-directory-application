@@ -51,7 +51,11 @@ export const EmployeeDetailsScreen = ({route}) => {
             </Text>
             {Object.keys(item.address).map(key => {
               if (key === 'geo') return;
-              return <Text style={styles.bodyText}>{item.address[key]}</Text>;
+              return (
+                <Text key={key} style={styles.bodyText}>
+                  {item.address[key]}
+                </Text>
+              );
             })}
           </View>
         )}
@@ -67,7 +71,11 @@ export const EmployeeDetailsScreen = ({route}) => {
               Company:
             </Text>
             {Object.keys(item.company).map(key => {
-              return <Text style={styles.bodyText}>{item.company[key]}</Text>;
+              return (
+                <Text key={key} style={styles.bodyText}>
+                  {item.company[key]}
+                </Text>
+              );
             })}
           </View>
         )}
