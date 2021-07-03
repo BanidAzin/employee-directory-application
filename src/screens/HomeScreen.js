@@ -27,7 +27,6 @@ export const HomeScreen = ({navigation}) => {
   const fetchEmployeeData = () => {
     getData({url: EMPLOYEE_DATA_URL})
       .then(response => {
-        console.log(response);
         setEmployeeData(response);
         setError('');
       })
