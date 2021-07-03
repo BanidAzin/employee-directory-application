@@ -1,9 +1,9 @@
 import React from 'react';
 import {ListItem, Avatar} from 'react-native-elements';
 
-export const EmployeeItem = ({item}) => {
+export const EmployeeItem = ({item, onPress}) => {
   return (
-    <ListItem key={item.id} bottomDivider onPress={() => console.log('hii')}>
+    <ListItem key={item.id} bottomDivider onPress={onPress}>
       <Avatar
         rounded
         size="large"

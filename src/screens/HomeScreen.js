@@ -1,5 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import {View, FlatList, ActivityIndicator, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  ActivityIndicator,
+  StyleSheet,
+} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {getData} from '../Helpers';
@@ -39,17 +45,38 @@ export const HomeScreen = ({navigation}) => {
     );
 
   const renderEmployeeItem = ({item}) => {
-    return <EmployeeItem item={item} />;
+    return (
+      <EmployeeItem
+        item={item}
+        onPress={() => navigation.navigate('Details', {item})}
+      />
+    );
   };
 
   return (
-    <View style={{...styles.container, paddingBottom: insets.bottom}}>
-      <FlatList
-        data={employeeData}
-        renderItem={renderEmployeeItem}
-        keyExtractor={item => item.id.toString()}
-      />
-    </View>
+    <>
+      <View
+        // eslint-disable-next-line react-native/no-inline-styles
+        style={{
+          ...styles.container,
+          paddingBottom: error.length === 0 ? insets.bottom : 0,
+        }}>
+        <FlatList
+          data={employeeData}
+          renderItem={renderEmployeeItem}
+          keyExtractor={item => item.id.toString()}
+        />
+      </View>
+      {error.length > 0 && (
+        <View
+          style={{
+            ...styles.errorContainer,
+            paddingBottom: insets.bottom,
+          }}>
+          <Text style={styles.errorText}>{error}</Text>
+        </View>
+      )}
+    </>
   );
 };
 
@@ -62,5 +89,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+  },
+  errorContainer: {
+    backgroundColor: 'red',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 5,
+    paddingVertical: 10,
+    minHeight: 30,
+  },
+  errorText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });

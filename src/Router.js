@@ -24,7 +24,11 @@ export const Router = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="Details" component={EmployeeDetailsScreen} />
+      <Stack.Screen
+        name="Details"
+        component={EmployeeDetailsScreen}
+        options={({route}) => ({title: route.params?.item?.name ?? 'Details'})}
+      />
     </Stack.Navigator>
   );
 };
