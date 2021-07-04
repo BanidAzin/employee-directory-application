@@ -8,11 +8,19 @@ import {
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {SearchBar} from 'react-native-elements';
+import Realm from 'realm';
 
 import {getData} from '../Helpers';
 import {EmployeeItem} from '../components';
+import {EMPLOYEE_SCHEMA, EmployeeSchema} from '../data/schema';
 
 const EMPLOYEE_DATA_URL = 'https://www.mocky.io/v2/5d565297300000680030a986';
+
+const databaseOptions = {
+  path: 'realmT4.realm',
+  schema: [EmployeeSchema],
+  schemaVersion: 0,
+};
 
 export const HomeScreen = ({navigation}) => {
   const insets = useSafeAreaInsets();
@@ -27,7 +35,17 @@ export const HomeScreen = ({navigation}) => {
   useEffect(() => setDidMount(true), []);
 
   useEffect(() => {
-    fetchEmployeeData();
+    Realm.open(databaseOptions).then(realm => {
+      const localData = realm.objects(EMPLOYEE_SCHEMA);
+      if (localData.length > 0) {
+        const tempData = localData.map(key => JSON.parse(key.value));
+        setEmployeeFullData(tempData[0]);
+        setEmployeeData(tempData[0]);
+        setLoading(false);
+      } else {
+        fetchEmployeeData();
+      }
+    });
   }, []);
 
   useEffect(() => {
@@ -45,7 +63,6 @@ export const HomeScreen = ({navigation}) => {
   }, [searchText]);
 
   const filterEmployeeDataBySearchtext = data => {
-    console.log(data);
     return data.filter(
       key =>
         key.name.toUpperCase().includes(searchText.toUpperCase()) ||
@@ -60,6 +77,14 @@ export const HomeScreen = ({navigation}) => {
         setEmployeeFullData(response);
         setEmployeeData(response);
         setError('');
+        Realm.open(databaseOptions).then(realm => {
+          realm.write(() => {
+            realm.create(EMPLOYEE_SCHEMA, {
+              id: response[0]?.id,
+              value: JSON.stringify(response),
+            });
+          });
+        });
       })
       .catch(({errors}) => {
         setError(errors.message || 'Something went wrong!');
